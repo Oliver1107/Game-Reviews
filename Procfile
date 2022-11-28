@@ -1,0 +1,1 @@
+web: gunicorn game_review_code:APP -t 120

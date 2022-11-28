@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Video Game Scores</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic" />
+    </head>
+
+    <body>
+        <nav>
+            <a href="/" class="brand"><span>Video Game Scores</span></a>
+
+            <div class="menu">
+                <a href="/" class="button button">Home</a>
+                <a href="/predict-score" class="button success">Predict a Video Game Score</a>
+                <a href="/game-stats" class="button error">Video Game Statistics</a>
+                <a href="/project-process" class="button error">Project Process</a>
+            </div>
+        </nav>
+
+        <article class="flex two" style="padding: 3em 1em;">
+            <div>
+                <h1>Do you like this game?</h1>
+                <h3>{{ title }}</h3>
+                <h4>Developer: {{ dev }}</h4>
+                <h4>Release Date: {{ month }}/{{ day }}/{{ year }}</h4>
+                <h4>{{ summary }}</h4>
+            </div>
+            <div>
+                <form action="/recommend-games" method="post">
+                    <input type="hidden" name="index" value="{{ index }}">
+                    <input type="hidden" name="val" value="1">
+                    <input type="submit" class="button success" value="Yes">
+                </form>
+                <form action="/recommend-games" method="post">
+                    <input type="hidden" name="index" value="{{ index }}">
+                    <input type="hidden" name="val" value="0">
+                    <input type="submit" class="button error" value="No/Haven't played">
+                </form>
+                <form action="/show-recommendations" method="post">
+                    <input type="hidden" name="memory" value="{{ memory }}">
+                    <input type="submit" value="Finish (the more answers you give, the better the recommendations will be!)">
+                </form>
+            </div>
+        </article>
+    </body>
+</html>
