@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-
+    
     <head>
         <title>Video Game Scores</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic" />
@@ -14,12 +14,10 @@
                 <a href="/predict-score" class="button success">Predict a Video Game Score</a>
                 <a href="/recommend-games" class="button success">Get Custom Recommendations</a>
                 <a href="/game-stats" class="button error">Video Game Statistics</a>
-                <a href="/project-process" class="button error">Project Process</a>
             </div>
         </nav>
 
         <article class="flex two" style="padding: 3em 1em;">
-
             <div>
                 <h1 style="color:dodgerblue">Game Reviews Project by Oliver Castellanos</h1>
                 <h2>A study on video game scoring using data gathered from the web.</h2>
@@ -30,9 +28,8 @@
                 <h4>Get recommendations for games you might like by liking or disliking a series of games in my database.</h4>
                 <h3 style="color:orangered;text-align: center;">- Game stats -</h3>
                 <h4>Analysis of video game features and scoring.</h4>
-                <h3 style="color:orangered;text-align: center;">- Project process -</h3>
-                <h4>Description of my process of creating this project.</h4>
             </div>
+
             <div>
                 <h3>All information was scraped off of metacritic.com:</h3>
                 <img src="{{ url_for('static', filename='images/metacritic_page.png') }}" alt="metacritic data image" width="680" height="400">

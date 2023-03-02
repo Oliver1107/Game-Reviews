@@ -14,12 +14,10 @@
                 <a href="/" class="button button">Home</a>
                 <a href="/recommend-games" class="button success">Get Custom Recommendations</a>
                 <a href="/game-stats" class="button error">Video Game Statistics</a>
-                <a href="/project-process" class="button error">Project Process</a>
             </div>
         </nav>
 
         <article class="flex two" style="padding: 3em 1em;">
-
             <div>
                 <h1>Predict a Score</h1>
                 {% block content %}
@@ -30,35 +28,41 @@
                       <option value="{{ rating }}">{{ rating }}</option>
                       {% endfor %}
                     </select>
+
                     <p>Developer:</p>
                     <select name="developer">
                       {% for developer in developers %}
                       <option value="{{ developer }}">{{ developer }}</option>
                       {% endfor %}
                     </select>
+
                     <p>Number of Players:</p>
                     <select name="player">
                       {% for player in players %}
                       <option value="{{ player }}">{{ player }}</option>
                       {% endfor %}
                     </select>
+
                     <p>Online Multiplayer?</p>
                     <select name="online">
                       <option value="0">Yes</option>
                       <option value="1">No</option>
                     </select>
+
                     <p>Release Month:</p>
                     <select name="month">
                       {% for i in range(1, 13) %}
                       <option value="{{ i }}">{{ i }}</option>
                       {% endfor %}
                     </select>
+
                     <p>Release Year:</p>
                     <select name="year">
                       {% for i in range(1970, 2031) %}
                       <option value="{{ i }}">{{ i }}</option>
                       {% endfor %}
                     </select>
+
                     <p>Genres:</p>
                     {% for genre in genres %}
                     <label>
@@ -66,6 +70,7 @@
                       <span class="checkable">{{ genre }}</span>
                     </label>
                     {% endfor %}
+                    
                     <p>Summary:</p>
                     <input type="text" name="summary" placeholder="Type a description/summary of the video game">
                     <input type="submit" value="Predict">
@@ -73,16 +78,12 @@
             </div>
 
             <div>
-                <h2>Critic Score Prediction (Out of 100):</h2>
+                <h2>Critic Score Range Prediction (Out of 100):</h2>
                 <h3>{{ ms_score }}</h3>
-                <h2>User Score Prediction (Out of 10):</h2>
+                <h2>User Score Range Prediction (Out of 100):</h2>
                 <h3>{{ us_score }}</h3>
-                {% if warning %}
-                <p>You may get a more accurate score if you give a longer summary or use more descriptive words.</p>
-                {% endif %}
                 {% endblock %}
             </div>
-
         </article>
     </body>
 </html>

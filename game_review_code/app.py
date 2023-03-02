@@ -7,6 +7,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from category_encoders import OneHotEncoder
 from flask import Flask, render_template, request
+from game_review_code.model_train import Vectorizer
 from game_review_code.predict_score import (prediction, genres, ratings,
                                             players, developers)
 
@@ -26,17 +27,11 @@ def create_app():
     def stats():
         return render_template('game_stats.html')
 
-    @app.route('/project-process')
-    def process():
-
-        return render_template('process.html')
-
     @app.route('/predict-score', methods=['POST', 'GET'])
     def predict():
         if request.method == 'GET':
             ms_score = 'No score yet.'
             us_score = 'No score yet.'
-            warning = False
 
         if request.method == 'POST':
             try:
@@ -52,27 +47,22 @@ def create_app():
                         genre.append(val)
                 summary = request.values['summary']
 
-                preds = prediction(rating, developer, player,
-                                   online, month, year,
-                                   genre, summary)
+                preds = prediction(summary, rating, developer,
+                                   player, online, month,
+                                   year, genre)
                 ms_score = preds[0]
                 us_score = preds[1]
-                if 'warning' in preds:
-                    warning = True
-                else:
-                    warning = False
 
             except ValueError:
                 ms_score = 'Not enough data.'
                 us_score = 'Not enough data.'
-                warning = False
 
         return render_template(
             'predict_score.html', ratings=ratings, developers=developers,
             players=players, genres=genres, ms_score=ms_score,
-            us_score=us_score, warning=warning)
+            us_score=us_score)
 
-    df = pd.read_csv('game_data/vectored_reviews.csv').drop(
+    df = pd.read_csv('game_data/wrangled_reviews.csv').drop(
         columns=['Unnamed: 0'])
     drop = df[df['Developer'] == 'Other'].index
     df.drop(drop, inplace=True)
@@ -117,11 +107,12 @@ def create_app():
     def show_recs():
         try:
             memory = eval(request.values['memory'])
-            samp_df = df.copy()
-            samp_df = samp_df.loc[list(memory.keys())]
+            vect_df = Vectorizer(max_df=0.25, min_df=0.05).fit_transform(df)
+            vect_df['Summary'] = df['Summary']
+            samp_df = vect_df.loc[list(memory.keys())]
             samp_df['target'] = list(memory.values())
             X = samp_df.drop(
-                columns=['Summary', 'Title', 'Platform',
+                columns=['Title', 'Platform',
                          'Release Day of Month', 'target'])
             y = samp_df['target']
             model = make_pipeline(OneHotEncoder(),
@@ -129,12 +120,12 @@ def create_app():
                                   LogisticRegression())
             model.fit(X, y)
 
-            rdf = df.drop(list(memory.keys())).drop(
+            rdf = vect_df.drop(list(memory.keys())).drop(
                 columns=['Platform', 'Release Day of Month'])
-            tdf = rdf.drop(columns=['Title', 'Summary'])
+            tdf = rdf.drop(columns=['Title'])
 
             preds = model.predict_proba(tdf)
-            thresh = 0.90
+            thresh = 0.70
             recs = []
             for i in range(len(preds)):
                 pred = preds[i]
@@ -148,7 +139,7 @@ def create_app():
             num_recs = min([10, len(recommendations)])
             games = []
             for i in range(num_recs):
-                genre_cols = recommendations.columns[10:-97]
+                genre_cols = recommendations.columns[9:-98]
                 genres = []
                 for col in genre_cols:
                     if recommendations.iloc[i][col]:

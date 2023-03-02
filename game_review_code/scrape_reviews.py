@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 
+# retrieve all pages on metacritics game rankings
 soups = []
 for i in range(198):
     url = 'https://www.metacritic.com/browse/games/score/metascore/all/all/filtered?page=' + f'{i}'
@@ -19,7 +20,7 @@ for i in range(198):
     soup = BeautifulSoup(page.content, 'html.parser')
     soups.append(soup)
 
-
+# retrieve the title of each game
 games = []
 for soup in soups:
     elements = soup.find_all('a')
@@ -27,17 +28,17 @@ for soup in soups:
         if element.get('class') == ['title']:
             games.append(element)
 
-
+# retrieve the details page of each game
 review_urls = []
 for game in games:
     url = 'https://www.metacritic.com' + game.get('href') + '/details'
     review_urls.append(url)
 
-
+# collect the details of each game
 game_info = []
 for url in review_urls:
     page = get(
-        url, 
+        url,
         headers={
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             'User-Agent': "Magic Browser"
@@ -46,15 +47,21 @@ for url in review_urls:
     soup = BeautifulSoup(page.content, 'html.parser')
 
     try:
-        date = soup.find_all()[([soup.find_all().index(element) for element in soup.find_all() if element.text == 'Release Date:'][0] + 1)].text
+        date = soup.find_all()[([
+            soup.find_all().index(element) for element in soup.find_all() if element.text == 'Release Date:'
+        ][0] + 1)].text
     except IndexError:
         date = 'None'
     try:
-        summary = soup.find_all()[([soup.find_all().index(element) for element in soup.find_all() if element.text == 'Summary:'][0] + 1)].text
+        summary = soup.find_all()[([
+            soup.find_all().index(element) for element in soup.find_all() if element.text == 'Summary:'
+        ][0] + 1)].text
     except IndexError:
         summary = 'None'
     try:
-        developer = soup.find_all()[([soup.find_all().index(element) for element in soup.find_all() if element.text == 'Developer:'][0] + 1)].text
+        developer = soup.find_all()[([
+            soup.find_all().index(element) for element in soup.find_all() if element.text == 'Developer:'
+        ][0] + 1)].text
     except IndexError:
         developer = 'None'
     try:
@@ -62,23 +69,33 @@ for url in review_urls:
     except IndexError:
         platform = 'None'
     try:
-        genres = soup.find_all()[([soup.find_all().index(element) for element in soup.find_all() if element.text == 'Genre(s):'][0] + 1)].text
+        genres = soup.find_all()[([
+            soup.find_all().index(element) for element in soup.find_all() if element.text == 'Genre(s):'
+        ][0] + 1)].text
     except IndexError:
         genres = 'None'
     try:
-        rating = soup.find_all()[([soup.find_all().index(element) for element in soup.find_all() if element.text == 'Rating:'][0] + 1)].text
+        rating = soup.find_all()[([
+            soup.find_all().index(element) for element in soup.find_all() if element.text == 'Rating:'
+        ][0] + 1)].text
     except IndexError:
         rating = 'None'
     try:
-        players = soup.find_all()[([soup.find_all().index(element) for element in soup.find_all() if element.text == 'Number of Players:'][0] + 1)].text
+        players = soup.find_all()[([
+            soup.find_all().index(element) for element in soup.find_all() if element.text == 'Number of Players:'
+        ][0] + 1)].text
     except IndexError:
         players = '1 Player'
     try:
-        online = soup.find_all()[([soup.find_all().index(element) for element in soup.find_all() if element.text == 'Number of Online Players:'][0] + 1)].text
+        online = soup.find_all()[([
+            soup.find_all().index(element) for element in soup.find_all() if element.text == 'Number of Online Players:'
+        ][0] + 1)].text
     except IndexError:
         online = 'None'
     try:
-        esrb = soup.find_all()[([soup.find_all().index(element) for element in soup.find_all() if element.text == 'ESRB Descriptors:'][0] + 1)].text
+        esrb = soup.find_all()[([
+            soup.find_all().index(element) for element in soup.find_all() if element.text == 'ESRB Descriptors:'
+        ][0] + 1)].text
     except IndexError:
         esrb = 'None'
     try:
@@ -105,7 +122,7 @@ for url in review_urls:
     }
     game_info.append(info)
 
-
+# create the dataframe of scraped data and save as csv
 columns = {
     'Title': [game.text for game in games],
     'Release Date': [game['Release Date'] for game in game_info],
