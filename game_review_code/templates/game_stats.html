@@ -20,6 +20,17 @@
         <article class="flex two" style="padding: 3em 1em;">
             <div>
                 <h1>Game Stats</h1>
+                <h2>Metascore for games of each showing larger percentage of top scorers coming from the early 2000's</h2>
+                <img src="{{ url_for('static', filename='images/year_chart.png') }}" alt="chart of game reviews over time" width="680" height="900">
+                
+                <h2>Average score for different genre combos with darker squares showing combos that produce higher scoring games on average</h2>
+                <img src="{{ url_for('static', filename='images/genre_chart.png') }}" alt="heatmap of genre average reviews" width="680" height="600">
+
+                <h2>Most frequent words in the Metacritic descriptions of games with a Metascore of 90+</h2>
+                <img src="{{ url_for('static', filename='images/description_chart.png') }}" alt="top words used in the top scored games" width="680" height="500">
+                
+                <h2>Confusion Matrix showing precision of classifier model used in the game review prediction</h2>
+                <img src="{{ url_for('static', filename='images/confusion_matrix.png') }}" alt="confusion matrix of classifier model" width="680" height="500">
             </div>
         </article>
     </body>

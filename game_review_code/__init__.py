@@ -1,4 +1,4 @@
-"""Steps to perform once app is ran."""
+"""Create game review analysis app."""
 
 
 from game_review_code.app import create_app

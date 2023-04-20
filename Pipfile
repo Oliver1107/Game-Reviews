@@ -16,6 +16,7 @@ ipykernel = "*"
 matplotlib = "*"
 seaborn = "*"
 ipywidgets = "*"
+squarify = "*"
 
 [dev-packages]
 
